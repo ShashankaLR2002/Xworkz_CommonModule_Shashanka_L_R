@@ -2,16 +2,16 @@ Signup
 User provides:
 email: user@example.com
 Other details like name, phone number, etc.
-A password (e.g., ABC123!) is randomly generated and saved to the database.
+A password (ABC123) is randomly generated and saved to the database.
 
 
 Log in 
 User provides:
 email: user@example.com
-password: ABC123!
+password: ABC123
 The application:
 Retrieves the PersonEntity for user@example.com.
-Compares the provided password (ABC123!) with the stored password.
+Compares the provided password (ABC123) with the stored password.
 If they match, login is successful.
 
 Summary
