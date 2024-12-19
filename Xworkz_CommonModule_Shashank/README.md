@@ -3,7 +3,7 @@ User provides:
 email: user@example.com
 Other details like name, phone number, etc.
 A password (e.g., ABC123!) is randomly generated and saved to the database.
-Login
+
 
 Log in 
 User provides:
