@@ -41,5 +41,21 @@ public class Controller {
             return "signin";
         }
     }
+
+    @PostMapping("/resetPassword")
+    public String resetPassword(String email, String oldPassword, String newPassword, String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            return "resetpassword";
+        }
+
+        boolean isValid = personService.resetPassword(email, oldPassword, newPassword);
+        if (isValid) {
+            return "signin";
+        } else {
+            return "resetpassword";
+        }
+    }
+
+
 }
 

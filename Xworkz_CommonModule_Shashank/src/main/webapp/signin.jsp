@@ -29,6 +29,10 @@
       max-width: 600px;
       margin: 0 auto;
     }
+    .reset-link {
+      text-align: center;
+      margin-top: 10px;
+    }
   </style>
 </head>
 <body>
@@ -69,6 +73,10 @@
 
        <button type="submit" class="btn btn-primary w-100">Sign In</button>
     </form>
+
+    <div class="reset-link">
+      <a href="resetpassword.jsp" class="btn btn-link">Reset your Password</a>
+    </div>
   </div>
 
 </body>
