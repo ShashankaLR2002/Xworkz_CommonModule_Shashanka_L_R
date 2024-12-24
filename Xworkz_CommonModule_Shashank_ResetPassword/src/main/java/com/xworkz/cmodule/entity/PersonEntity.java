@@ -33,8 +33,8 @@ public class PersonEntity {
     @Column(name = "Password")
     String password;
 
-    @Column(name = "Resetstatus")
-    int Resetstatus;
+    @Column(name = "LoginCount")
+    int LoginCount;
 
 
 }

@@ -33,21 +33,33 @@ public class Controller {
 
     @PostMapping("/signinact")
     public String onlogin(String email, String password, Model model) {
-        System.out.println("Sign In with email: " + email);
         PersonEntity entity = personService.login(email, password);
-        if (entity != null) {
-            return "success";
-        } else {
+
+        if (entity == null) {
             return "signin";
         }
+
+        if (entity.getLoginCount() == -1) {
+            return "resetpassword";
+        }
+
+        if (entity.getLoginCount() > 3) {
+            return "signin";
+        }
+
+        if (entity.getLoginCount() == 0) {
+            return "success";
+        }
+
+        return "signin";
     }
+
 
     @PostMapping("/resetPassword")
     public String resetPassword(String email, String oldPassword, String newPassword, String confirmPassword) {
         if (!newPassword.equals(confirmPassword)) {
             return "resetpassword";
         }
-
         boolean isValid = personService.resetPassword(email, oldPassword, newPassword);
         if (isValid) {
             return "signin";

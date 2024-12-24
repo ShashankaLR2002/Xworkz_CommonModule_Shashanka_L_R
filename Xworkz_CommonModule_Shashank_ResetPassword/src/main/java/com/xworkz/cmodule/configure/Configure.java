@@ -17,6 +17,7 @@ import javax.sql.DataSource;
 @Configuration
 @ComponentScan("com.xworkz.cmodule")
 @EnableWebMvc
+
 public class Configure {
 
     Configure() {

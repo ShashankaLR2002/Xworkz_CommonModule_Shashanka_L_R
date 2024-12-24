@@ -7,6 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.mail.*;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+import java.util.Properties;
 import java.util.Random;
 
 @Service
@@ -39,7 +43,7 @@ public class PersonServiceImpl implements PersonService {
         entity.setAlternatephone(dto.getAlternatephone());
         entity.setLocation(dto.getLocation());
         entity.setPassword(generatedPassword);
-        entity.setResetstatus(-1);
+        entity.setLoginCount(-1);
         return personRepository.onsave(entity);
     }
 
@@ -47,19 +51,29 @@ public class PersonServiceImpl implements PersonService {
     public PersonEntity login(String email, String password) {
         PersonEntity entity = personRepository.onlogin(email, password);
 
-        if (entity != null) {
-            if (entity.getPassword().equals(password)) {
-                System.out.println("Login successful for email: " + email);
-                return entity;
-            } else {
-                System.out.println("Invalid password for email: " + email);
-
-            }
+        if (entity == null) {
             return null;
-        } else {
-            System.out.println("No user with email: " + email);
         }
-        return personRepository.onlogin(email, password);
+
+        if (entity.getLoginCount() == -1) {
+            return entity;
+        }
+
+        if (entity.getLoginCount() > 3) {
+            System.out.println("Account locked for email: " + email);
+            return null;
+        }
+
+        if (entity.getPassword().equals(password)) {
+            entity.setLoginCount(0);
+            personRepository.update(entity);
+            return entity;
+        } else {
+            int updatedCount = entity.getLoginCount() + 1;
+            entity.setLoginCount(updatedCount);
+            personRepository.update(entity);
+            return null;
+        }
     }
 
     @Override
@@ -135,12 +149,53 @@ public class PersonServiceImpl implements PersonService {
                 String encryptedPassword = passwordEncoder.encode(newPassword);
 
                 entity.setPassword(encryptedPassword);
-                entity.setResetstatus(0);
+                entity.setLoginCount(0);
 
                 return personRepository.update(entity);
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean saveEmail(String email, String password) {
+        final String username = "lrshashank2002@gmail.com"; // Your email
+        final String userPassword = "rgwk dmcp jfym wivn"; // Use the App Password generated in your Google account
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true"); // For STARTTLS
+
+        // Create a session with authentication
+        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, userPassword);
+            }
+        });
+
+        try {
+            // Create a new email message
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("Your Password");
+            message.setText("Your generated password is: " + password);
+
+            // Send the email
+            Transport.send(message);
+
+            System.out.println("Email sent successfully.");
+            return true;
+
+        } catch (MessagingException e) {
+            // Log the exception for debugging purposes
+            System.err.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

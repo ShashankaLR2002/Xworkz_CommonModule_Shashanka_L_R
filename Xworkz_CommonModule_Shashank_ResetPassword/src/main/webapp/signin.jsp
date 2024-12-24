@@ -70,14 +70,13 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" name="password" required class="form-control">
       </div>
-
+      <c:if test="${not empty accountLockedMessage}">
+             <div style="color: red;">
+               <p>${accountLockedMessage}</p>
+             </div>
+           </c:if>
        <button type="submit" class="btn btn-primary w-100">Sign In</button>
     </form>
-
-    <div class="reset-link">
-      <a href="resetpassword.jsp" class="btn btn-link">Reset your Password</a>
-    </div>
-  </div>
-
+ </div>
 </body>
 </html>

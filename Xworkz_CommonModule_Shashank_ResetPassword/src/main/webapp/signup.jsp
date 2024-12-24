@@ -7,16 +7,19 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
+
     .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
       width: 100%;
     }
+
     .logo-img {
       width: 140px;
       height: 70px;
     }
+
     .header-buttons {
       display: flex;
       gap: 10px;
@@ -55,7 +58,7 @@
   </header>
 
   <div class="container form-container">
-    <form action="signupact" method="post">
+    <form action="signupact" method="post" >
       <h3>Register with your Details</h3>
 
       <div class="mb-3">
@@ -189,6 +192,31 @@
            }
 
            };
+
+
+           function onemailvalid()
+                                   {
+                     console.log("onemailvalid Function");
+
+                     var AlternatePhonenUmber = document.getElementById('alternatephone');
+                     var alternatephonevalue = AlternatePhonenUmber.value;
+                     console.log("alternatephone entered: " +alternatephonevalue);
+
+                     var xhttp = new XMLHttpRequest();
+                     xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternatephone/" + alternatephonevalue, true);
+                     xhttp.send();
+                     xhttp.onload = function()
+                      {
+                     document.getElementById("displayalternatephone").innerHTML = this.responseText;
+                      }
+
+                      };
+
+
+
+
+
+
 </script>
 </div>
 

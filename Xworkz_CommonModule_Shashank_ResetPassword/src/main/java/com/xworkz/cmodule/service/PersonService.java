@@ -21,5 +21,6 @@ public interface PersonService {
 
     public boolean resetPassword(String email, String oldPassword, String newPassword);
 
+    public boolean saveEmail(String email, String password);
 
 }
