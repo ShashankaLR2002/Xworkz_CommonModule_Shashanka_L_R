@@ -33,6 +33,7 @@ public class PersonRepositoryImpl implements PersonRepository {
         } finally {
             entityManager.close();
         }
+
         return true;
     }
 
@@ -40,8 +41,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     public PersonEntity onlogin(String email, String password) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT p FROM PersonEntity p WHERE p.email = :email";
-            Query query = entityManager.createQuery(queryStr);
+            Query query = entityManager.createNamedQuery("getPersonEntitylistByEmail");
             query.setParameter("email", email);
             List<PersonEntity> result = query.getResultList();
 
@@ -60,8 +60,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     public long getCountofName(String name) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT COUNT(p) FROM PersonEntity p WHERE p.name = :name";
-            Query query = entityManager.createQuery(queryStr);
+            Query query = entityManager.createNamedQuery("getPersonEntitycountbyname");
             query.setParameter("name", name);
 
             long count = (long) query.getSingleResult();
@@ -83,8 +82,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     public long getCountofEmail(String email) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT COUNT(p) FROM PersonEntity p WHERE p.email = :email";
-            Query query = entityManager.createQuery(queryStr);
+            Query query = entityManager.createNamedQuery("getPersonEntitycountByEmail");
             query.setParameter("email", email);
 
             long count = (long) query.getSingleResult();
@@ -105,30 +103,35 @@ public class PersonRepositoryImpl implements PersonRepository {
     public long getCountofNumber(String phoneNumber) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT COUNT(p) FROM PersonEntity p WHERE p.phoneNumber = :phoneNumber";
-            Query query = entityManager.createQuery(queryStr);
-            query.setParameter("phoneNumber", phoneNumber);
+            Query query = entityManager.createNamedQuery("getPersonEntitycountbyphoneNumber");
+
+            Long phoneNumberRef = Long.valueOf(phoneNumber);
+            query.setParameter("phoneNumber", phoneNumberRef);
 
             long count = (long) query.getSingleResult();
-            System.out.println("  count for phoneNumber: " + count);
-
+            System.out.println("Count for phoneNumber: " + count);
             return count;
 
+        } catch (NumberFormatException e) {
+            System.err.println("Invalid phoneNumber format: " + phoneNumber);
+            e.printStackTrace();
         } catch (Exception e) {
-            System.out.println("Error getting  count for phoneNumber: " + phoneNumber);
+            System.err.println("Error getting count for phoneNumber: " + phoneNumber);
             e.printStackTrace();
         } finally {
+
             entityManager.close();
+
         }
         return 0;
     }
 
+
     @Override
-    public long getAlternateEmail(String alternateemail) {
+    public long getCountAlternateEmail(String alternateemail) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String Quesrystr = "SELECT COUNT(p) FROM PersonEntity p WHERE p.alternateemail = :alternateemail";
-            Query query = entityManager.createQuery(Quesrystr);
+            Query query = entityManager.createNamedQuery("getPersonEntitycountbyalternateemail");
             query.setParameter("alternateemail", alternateemail);
             long count = (long) query.getSingleResult();
 
@@ -144,25 +147,27 @@ public class PersonRepositoryImpl implements PersonRepository {
     }
 
     @Override
-    public long getAlternatePhone(String alternatephone) {
+    public long getCountofAlternatePhone(String alternatephone) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String QueryStr = "SELECT COUNT(p) FROM PersonEntity p WHERE p.alternatephone = :alternatephone";
-            Query query = entityManager.createQuery(QueryStr);
-            query.setParameter("alternatephone", alternatephone);
+            Query query = entityManager.createNamedQuery("getPersonEntitycountbyalternatephone");
+            Long alternatephoneref = Long.valueOf(alternatephone);
+            query.setParameter("alternatephone", alternatephoneref);
 
             long count = (long) query.getSingleResult();
-            System.out.println("count for Alternate Phone" + count);
+            System.out.println("Count for alternatePhone: " + count);
             return count;
 
         } catch (Exception e) {
-            System.out.println("Error getting  count for Alternatephone : " + alternatephone);
+            System.err.println("Error getting count for alternatePhone: " + alternatephone);
             e.printStackTrace();
         } finally {
             entityManager.close();
         }
+
         return 0;
     }
+
 
     @Override
     public boolean update(PersonEntity entity) {
@@ -189,8 +194,7 @@ public class PersonRepositoryImpl implements PersonRepository {
     public PersonEntity findByEmail(String email) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         try {
-            String queryStr = "SELECT p FROM PersonEntity p WHERE p.email = :email";
-            Query query = entityManager.createQuery(queryStr);
+            Query query = entityManager.createNamedQuery("getPersonEntitylistbyemailforResetpassword");
             query.setParameter("email", email);
 
             List<PersonEntity> result = query.getResultList();

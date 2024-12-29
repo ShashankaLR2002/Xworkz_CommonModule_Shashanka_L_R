@@ -14,9 +14,9 @@ public interface PersonRepository {
 
     public long getCountofNumber(String phoneNumber);
 
-    public long getAlternateEmail(String alternateemail);
+    public long getCountAlternateEmail(String alternateemail);
 
-    public long getAlternatePhone(String alternatephone);
+    public long getCountofAlternatePhone(String alternatephone);
 
     boolean update(PersonEntity entity);
 

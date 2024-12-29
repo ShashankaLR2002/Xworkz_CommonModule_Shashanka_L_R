@@ -15,7 +15,7 @@ import java.util.Random;
 
 @Service
 public class PersonServiceImpl implements PersonService {
-
+    String generatedPassword;
     @Autowired
     private PersonRepository personRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
@@ -32,7 +32,7 @@ public class PersonServiceImpl implements PersonService {
             sb.append(characters.charAt(index));
         }
 
-        String generatedPassword = sb.toString();
+        generatedPassword = sb.toString();
         System.out.println("Generated password: " + generatedPassword);
 
         PersonEntity entity = new PersonEntity();
@@ -44,6 +44,7 @@ public class PersonServiceImpl implements PersonService {
         entity.setLocation(dto.getLocation());
         entity.setPassword(generatedPassword);
         entity.setLoginCount(-1);
+
         return personRepository.onsave(entity);
     }
 
@@ -59,7 +60,7 @@ public class PersonServiceImpl implements PersonService {
             return entity;
         }
 
-        if (entity.getLoginCount() > 3) {
+        if (entity.getLoginCount() > 2) {
             System.out.println("Account locked for email: " + email);
             return null;
         }
@@ -120,7 +121,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public long getCountofAlternateEmail(String alternateemail) {
-        long count = personRepository.getAlternateEmail(alternateemail);
+        long count = personRepository.getCountAlternateEmail(alternateemail);
 
         if (count > 0) {
             System.out.println("Alternate Email Aleady Exist " + alternateemail);
@@ -132,7 +133,7 @@ public class PersonServiceImpl implements PersonService {
 
     @Override
     public long getCountofAlternatephonenumber(String alternatephone) {
-        long count = personRepository.getAlternatePhone(alternatephone);
+        long count = personRepository.getCountofAlternatePhone(alternatephone);
         if (count > 0) {
             System.out.println("Alternatehone aleady Exist " + alternatephone);
             return count;
@@ -158,17 +159,16 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean saveEmail(String email, String password) {
-        final String username = "lrshashank2002@gmail.com"; // Your email
-        final String userPassword = "rgwk dmcp jfym wivn"; // Use the App Password generated in your Google account
+    public boolean saveEmail(String email) {
+        final String username = "lrshashank2002@gmail.com";
+        final String userPassword = "xrlc rqiv zsus wcnx";
 
         Properties prop = new Properties();
         prop.put("mail.smtp.host", "smtp.gmail.com");
         prop.put("mail.smtp.port", "587");
         prop.put("mail.smtp.auth", "true");
-        prop.put("mail.smtp.starttls.enable", "true"); // For STARTTLS
+        prop.put("mail.smtp.starttls.enable", "true");
 
-        // Create a session with authentication
         Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
             @Override
             protected PasswordAuthentication getPasswordAuthentication() {
@@ -177,27 +177,24 @@ public class PersonServiceImpl implements PersonService {
         });
 
         try {
-            // Create a new email message
+
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress(username));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
             message.setSubject("Your Password");
-            message.setText("Your generated password is: " + password);
+            message.setText("Your generated password is: " + generatedPassword);
 
-            // Send the email
             Transport.send(message);
 
-            System.out.println("Email sent successfully.");
+            System.out.println("Password sent " + generatedPassword);
             return true;
 
         } catch (MessagingException e) {
-            // Log the exception for debugging purposes
             System.err.println("Error sending email: " + e.getMessage());
             e.printStackTrace();
             return false;
         }
     }
-
 
 }
 
