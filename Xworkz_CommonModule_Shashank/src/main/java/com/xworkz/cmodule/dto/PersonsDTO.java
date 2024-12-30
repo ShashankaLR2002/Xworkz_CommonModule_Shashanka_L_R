@@ -1,5 +1,6 @@
 package com.xworkz.cmodule.dto;
 
+import com.xworkz.cmodule.entity.AbstractAuditEntity;
 import lombok.Data;
 
 import javax.validation.constraints.Digits;
@@ -8,7 +9,7 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
-public class PersonsDTO {
+public class PersonsDTO extends AbstractAuditEntity {
     @NotNull
     @Size(min = 2, max = 20, message = "Name must be between 2 and 10 characters")
     private String name;

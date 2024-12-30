@@ -1,6 +1,7 @@
 package com.xworkz.cmodule.service;
 
 import com.xworkz.cmodule.dto.PersonsDTO;
+import com.xworkz.cmodule.entity.AbstractAuditEntity;
 import com.xworkz.cmodule.entity.PersonEntity;
 import com.xworkz.cmodule.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,6 +45,8 @@ public class PersonServiceImpl implements PersonService {
         entity.setLocation(dto.getLocation());
         entity.setPassword(generatedPassword);
         entity.setLoginCount(-1);
+        entity.setCreatedBy(dto.getName());
+        entity.getCreatedDate();
 
         return personRepository.onsave(entity);
     }
@@ -195,6 +198,7 @@ public class PersonServiceImpl implements PersonService {
             return false;
         }
     }
+
 
 }
 
