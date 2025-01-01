@@ -16,9 +16,9 @@ import javax.validation.constraints.Digits;
 @NamedQuery(name = "getPersonEntitycountbyalternateemail", query = "SELECT COUNT(p) FROM PersonEntity p WHERE p.alternateemail = :alternateemail")
 @NamedQuery(name = "getPersonEntitycountbyalternatephone", query = "SELECT COUNT(p) FROM PersonEntity p WHERE p.alternatephone = :alternatephone")
 @NamedQuery(name = "getPersonEntitylistbyemailforResetpassword", query = "SELECT p FROM PersonEntity p WHERE p.email = :email")
+@NamedQuery(name = "getPersonEntitylistbynameforupdateprofile", query = "SELECT p FROM PersonEntity p WHERE p.name = :name")
 
-
-public class PersonEntity {
+public class PersonEntity extends AbstractAuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
