@@ -208,6 +208,28 @@ public class PersonRepositoryImpl implements PersonRepository {
         }
         return null;
     }
+
+    @Override
+    public PersonEntity findByName(String name) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+        try {
+
+            Query query = entityManager.createNamedQuery("getPersonEntitylistbynameforupdateprofile");
+            query.setParameter("name", name);
+
+            List<PersonEntity> result = query.getResultList();
+            if (!result.isEmpty()) {
+                return result.get(0);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+
+            entityManager.close();
+        }
+        return null;
+    }
+
 }
 
 

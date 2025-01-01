@@ -1,5 +1,6 @@
 package com.xworkz.cmodule.repository;
 
+import com.xworkz.cmodule.dto.PersonsDTO;
 import com.xworkz.cmodule.entity.PersonEntity;
 
 public interface PersonRepository {
@@ -21,6 +22,10 @@ public interface PersonRepository {
     boolean update(PersonEntity entity);
 
     PersonEntity findByEmail(String email);
+
+    public PersonEntity findByName(String name) ;
+
+
 
 
 }

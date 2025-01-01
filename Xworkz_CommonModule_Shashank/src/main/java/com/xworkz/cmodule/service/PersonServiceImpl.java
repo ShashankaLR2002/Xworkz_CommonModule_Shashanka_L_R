@@ -1,7 +1,6 @@
 package com.xworkz.cmodule.service;
 
 import com.xworkz.cmodule.dto.PersonsDTO;
-import com.xworkz.cmodule.entity.AbstractAuditEntity;
 import com.xworkz.cmodule.entity.PersonEntity;
 import com.xworkz.cmodule.repository.PersonRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.stereotype.Service;
 import javax.mail.*;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
+import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Random;
 
@@ -199,8 +199,34 @@ public class PersonServiceImpl implements PersonService {
         }
     }
 
+    @Override
+    public boolean updateprofile(PersonsDTO personsDTO) {
+        PersonEntity entity = personRepository.findByName(personsDTO.getName());
+
+        if (entity != null) {
+            entity.setName(personsDTO.getName());
+            entity.setEmail(personsDTO.getEmail());
+            entity.setPhoneNumber(personsDTO.getPhoneNumber());
+            entity.setAlternateemail(personsDTO.getAlternateemail());
+            entity.setAlternatephone(personsDTO.getAlternatephone());
+            entity.setLocation(personsDTO.getLocation());
+            entity.setUpdatedBy(personsDTO.getName());
+            entity.setUpdatedDate(LocalDateTime.now());
+            return personRepository.update(entity);
+        }
+
+        return false;
+    }
+
 
 }
+
+
+
+
+
+
+
 
 
 
