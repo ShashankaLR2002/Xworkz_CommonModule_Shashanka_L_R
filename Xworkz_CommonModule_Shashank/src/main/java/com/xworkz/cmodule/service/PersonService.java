@@ -26,6 +26,7 @@ public interface PersonService {
 
     public boolean saveEmail(String email);
 
-    public boolean updateprofile(PersonsDTO personsDTO) ;
+    public boolean updateprofile(PersonsDTO personsDTO);
 
-    }
+
+}

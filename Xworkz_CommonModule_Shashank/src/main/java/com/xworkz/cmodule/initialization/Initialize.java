@@ -1,6 +1,7 @@
 package com.xworkz.cmodule.initialization;
 
 import com.xworkz.cmodule.configuration.Configure;
+import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
@@ -21,5 +22,10 @@ public class Initialize extends AbstractAnnotationConfigDispatcherServletInitial
     @Override
     protected String[] getServletMappings() {
         return new String[]{"/"};
+    }
+
+    @Override
+    public void configureDefaultServletHandling(DefaultServletHandlerConfigurer configurer) {
+    configurer.enable();
     }
 }

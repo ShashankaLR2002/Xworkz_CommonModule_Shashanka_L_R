@@ -54,10 +54,8 @@
         <label for="confirmPassword" class="form-label">Confirm Password</label>
         <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" class="form-control" required>
       </div>
-
       <button type="submit" class="btn btn-primary">Reset Password</button>
     </form>
   </div>
-
 </body>
 </html>

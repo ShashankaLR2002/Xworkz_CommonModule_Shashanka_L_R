@@ -11,7 +11,24 @@
 
   <div class="text-center">
     <h1 class="display-4 text-success">Registered Successfully</h1>
-  </div>
+    <a href="Updateprofileact">
+      <button type="button" class="btn btn-primary mt-3">Update Profile</button>
+    </a>
+    <a href="ResetAct">
+      <button type="button" class="btn btn-primary mt-3">Reset Password</button>
+    </a>
+
+    <form action="updateimage" method="post" enctype="multipart/form-data" class="mt-3">
+      <label for="file-upload" class="btn btn-secondary">
+        Choose file
+      </label>
+
+      <input id="file-upload" type="file" name="Img" class="d-none" />
+      <button type="submit" class="btn btn-success mt-2">Upload</button>
+    </form>
+
+ </div>
+
 
 </body>
 </html>

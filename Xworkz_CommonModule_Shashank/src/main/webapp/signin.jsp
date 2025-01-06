@@ -46,13 +46,13 @@
 
       <h1>Course Registration</h1>
 
-      <div class="header-buttons ms-auto">
-        <form action="signup.jsp" method="post" style="display:inline;">
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-        </form>
-        <form action="signin.jsp" method="post" style="display:inline;">
+      <div class="header-buttons">
+         <a href ="SignupAct" style="display:inline;">
+          <button type="submit" class="btn btn-primary">Sign up</button>
+        </a>
+        <a href ="SigninAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
+        </a>
       </div>
     </div>
   </header>

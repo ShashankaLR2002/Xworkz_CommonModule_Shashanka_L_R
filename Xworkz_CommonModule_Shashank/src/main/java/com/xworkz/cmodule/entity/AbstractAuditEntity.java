@@ -4,7 +4,6 @@ import lombok.Data;
 
 import javax.persistence.MappedSuperclass;
 import java.io.Serializable;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @MappedSuperclass
@@ -14,6 +13,6 @@ public class AbstractAuditEntity implements Serializable {
     private LocalDateTime createdDate =LocalDateTime.now();
 
     private String updatedBy;
-    private LocalDate updatedDate = LocalDate.now();
+    private LocalDateTime updatedDate ;
 
 }

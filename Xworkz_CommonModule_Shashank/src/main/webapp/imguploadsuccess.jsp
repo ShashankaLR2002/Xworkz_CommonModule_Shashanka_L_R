@@ -29,12 +29,10 @@
     }
 
     .main-content {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      text-align: center;
-      font-size: 2rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
     }
   </style>
 </head>
@@ -46,10 +44,10 @@
       </div>
 
       <div class="header-buttons">
-         <a href ="SignupAct" style="display:inline;">
+         <a href="SignupAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign up</button>
         </a>
-        <a href ="SigninAct" style="display:inline;">
+        <a href="SigninAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign In</button>
         </a>
       </div>
@@ -57,7 +55,8 @@
   </header>
 
   <div class="main-content">
-    <h1>X-workz Course Registration</h1>
+    <h1 class="display-4 text-success">Image Uploaded Successfully</h1>
   </div>
+
 </body>
 </html>

@@ -7,8 +7,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
-    .header-content
-    {
+    .header-content {
       display: flex;
       justify-content: space-between;
       align-items: center;
@@ -18,8 +17,7 @@
       width: 140px;
       height: 70px;
     }
-    .header-buttons
-    {
+    .header-buttons {
       display: flex;
       gap: 10px;
     }
@@ -28,13 +26,11 @@
       flex: 1;
       margin: 0;
     }
-    .form-container
-    {
+    .form-container {
       max-width: 600px;
       margin: 0 auto;
     }
-    .error-message
-    {
+    .error-message {
       color: red;
       font-size: 0.875rem;
     }
@@ -50,15 +46,15 @@
 
       <h1>Course Registration</h1>
 
-      <div class="header-buttons ms-auto">
-        <form action="signup.jsp" method="post" style="display:inline;">
-          <button type="submit" class="btn btn-primary">Sign Up</button>
-        </form>
-        <form action="signin.jsp" method="post" style="display:inline;">
+      <div class="header-buttons">
+         <a href ="SignupAct" style="display:inline;">
+          <button type="submit" class="btn btn-primary">Sign up</button>
+        </a>
+        <a href ="SigninAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign In</button>
-        </form>
+        </a>
       </div>
-    </div>
+      </div>
   </header>
 
   <div class="container form-container">
@@ -101,146 +97,247 @@
 
       <div class="mb-3">
         <label for="location" class="form-label">Location:</label>
-        <input type="text" id="location" name="location" class="form-control" placeholder="Enter your location" required>
+        <select id="location" name="location" class="form-control">
+          <option value="">Select the option</option>
+          <c:forEach items="${listoflocation}" var="location">
+            <option value="${location}">${location}</option>
+          </c:forEach>
+        </select>
         <span id="displayLocation" class="error-message"></span>
       </div>
 
-      <button type="submit" class="btn btn-primary w-100">Submit</button>
+      <button type="submit" id="submitBtn" class="btn btn-primary w-100" disabled>Submit</button>
     </form>
   </div>
 
   <script>
+    window.onload = function() {
+      document.getElementById("submitBtn").disabled = true;
+    };
 
+    let ajaxValidationStatus = {
+      name: false,
+      email: false,
+      phoneNumber: false,
+      alternateemail: false,
+      alternatephone: false
+    };
 
-var emailvalue = "";
-var alternateemailvalue = "";
-var phoneNumbervalue = "";
-var alternatephonevalue = "";
+    function validateForm() {
+      const errorMessages = document.querySelectorAll('.error-message');
+      let hasError = false;
 
+      for (let message of errorMessages) {
+        if (message.innerHTML.trim() !== "") {
+          hasError = true;
+          break;
+        }
+      }
 
-function onname() {
-  var name = document.getElementById('name');
-  var namevalue = name.value;
+      for (let field in ajaxValidationStatus) {
+        if (!ajaxValidationStatus[field]) {
+          hasError = true;
+          break;
+        }
+      }
 
-  if (namevalue.trim().length < 4)
-  {
-    document.getElementById("displayName").innerHTML = "Name must be at least 4 characters long.";
-    return;
-  }
+      document.getElementById("submitBtn").disabled = hasError;
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/name/" + namevalue, true);
-  xhttp.send();
+      return !hasError;
+    }
 
-  xhttp.onload = function()
-   {
-    document.getElementById("displayName").innerHTML = this.responseText;
-  }
-};
+    function onname() {
+      var name = document.getElementById('name');
+      var namevalue = name.value;
 
+      if (namevalue.trim().length < 4) {
+        document.getElementById("displayName").innerHTML = "Name must be at least 4 characters long.";
+        ajaxValidationStatus.name = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayName").innerHTML = "";
+      }
 
-function onEmail()
-{
-  var email = document.getElementById('email');
-  emailvalue = email.value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/name/" + namevalue, true);
+      xhttp.send();
 
-  if (!emailvalue.includes('@gmail.com') && !emailvalue.includes('@yahoo.com') && !emailvalue.includes('@outlook.com') && !emailvalue.includes('@hotmail.com') && !emailvalue.includes('.edu')
-      && !emailvalue.includes('.org') && !emailvalue.includes('.info') && !emailvalue.includes('.net'))
-      {
-    document.getElementById("displayemail").innerHTML = "Enter a valid email address.";
-    return;
-  }
+      xhttp.onload = function() {
+        if (this.status === 200) {
+          document.getElementById("displayName").innerHTML = this.responseText;
+          ajaxValidationStatus.name = this.responseText.trim() === "";
+        } else {
+          ajaxValidationStatus.name = false;
+        }
+        validateForm();
+      };
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/email/" + emailvalue, true);
-  xhttp.send();
+      xhttp.onerror = function() {
+        ajaxValidationStatus.name = false;
+        validateForm();
+      };
+    }
 
-  xhttp.onload = function()
-  {
-    document.getElementById("displayemail").innerHTML = this.responseText;
-  }
-};
+    function onEmail() {
+      var email = document.getElementById('email');
+      emailvalue = email.value;
 
+      if (!emailvalue.includes('@gmail.com') && !emailvalue.includes('@yahoo.com') &&
+          !emailvalue.includes('@outlook.com') && !emailvalue.includes('@hotmail.com') &&
+          !emailvalue.includes('.edu') && !emailvalue.includes('.org') &&
+          !emailvalue.includes('.info') && !emailvalue.includes('.net')) {
+        document.getElementById("displayemail").innerHTML = "Enter a valid email address.";
+        ajaxValidationStatus.email = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayemail").innerHTML = "";
+      }
 
-function onPhoneNumber()
-{
-  var phoneNumber = document.getElementById('phoneNumber');
-  phoneNumbervalue = phoneNumber.value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/email/" + emailvalue, true);
+      xhttp.send();
 
-  if (phoneNumbervalue.trim().length !== 10 || (!phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7")
-  && !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9")))
-  {
-    document.getElementById("displayphoneNumber").innerHTML = "Phone number must contain 10 digits and should be valid.";
-    return;
-  }
+      xhttp.onload = function() {
+        if (this.status === 200) {
+          document.getElementById("displayemail").innerHTML = this.responseText;
+          ajaxValidationStatus.email = this.responseText.trim() === "";
+        } else {
+          ajaxValidationStatus.email = false;
+        }
+        validateForm();
+      };
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/phoneNumber/" + phoneNumbervalue, true);
-  xhttp.send();
+      xhttp.onerror = function() {
+        ajaxValidationStatus.email = false;
+        validateForm();
+      };
+    }
 
-  xhttp.onload = function()
-  {
-    document.getElementById("displayphoneNumber").innerHTML = this.responseText;
-  }
-};
+    function onPhoneNumber() {
+      var phoneNumber = document.getElementById('phoneNumber');
+      phoneNumbervalue = phoneNumber.value;
 
+      if (phoneNumbervalue.trim().length !== 10 || (!phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7") &&
+        !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9"))) {
+        document.getElementById("displayphoneNumber").innerHTML = "Phone number must contain 10 digits and should be valid.";
+        ajaxValidationStatus.phoneNumber = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayphoneNumber").innerHTML = "";
+      }
 
-function onAlternateemail()
-{
-  var alternateemail = document.getElementById('alternateemail');
-  alternateemailvalue = alternateemail.value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/phoneNumber/" + phoneNumbervalue, true);
+      xhttp.send();
 
-  if (!alternateemailvalue.includes('@gmail.com') && !alternateemailvalue.includes('@yahoo.com') && !alternateemailvalue.includes('@outlook.com')
-    && !alternateemailvalue.includes('@hotmail.com') && !alternateemailvalue.includes('.edu') && !alternateemailvalue.includes('.org') && !alternateemailvalue.includes('.info') && !alternateemailvalue.includes('.net'))
-    {
-    document.getElementById("displayalternateemail").innerHTML = "Enter a valid email address.";
-    return;
-  }
+      xhttp.onload = function() {
+        if (this.status === 200) {
+          document.getElementById("displayphoneNumber").innerHTML = this.responseText;
+          ajaxValidationStatus.phoneNumber = this.responseText.trim() === "";
+        } else {
+          ajaxValidationStatus.phoneNumber = false;
+        }
+        validateForm();
+      };
 
-  if (emailvalue === alternateemailvalue)
-  {
-    document.getElementById("displayalternateemail").innerHTML = "Email and Alternate Email should be different.";
-    return;
-  }
+      xhttp.onerror = function() {
+        ajaxValidationStatus.phoneNumber = false;
+        validateForm();
+      };
+    }
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternateemail/" + alternateemailvalue, true);
-  xhttp.send();
+    function onAlternateemail() {
+      var alternateemail = document.getElementById('alternateemail');
+      alternateemailvalue = alternateemail.value;
 
-  xhttp.onload = function()
-   {
-    document.getElementById("displayalternateemail").innerHTML = this.responseText;
-  }
-};
+      if (!alternateemailvalue.includes('@gmail.com') && !alternateemailvalue.includes('@yahoo.com') &&
+          !alternateemailvalue.includes('@outlook.com') && !alternateemailvalue.includes('@hotmail.com') &&
+          !alternateemailvalue.includes('.edu') && !alternateemailvalue.includes('.org') &&
+          !alternateemailvalue.includes('.info') && !alternateemailvalue.includes('.net')) {
+        document.getElementById("displayalternateemail").innerHTML = "Enter a valid email address.";
+        ajaxValidationStatus.alternateemail = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayalternateemail").innerHTML = "";
+      }
 
+      if (emailvalue === alternateemailvalue) {
+        document.getElementById("displayalternateemail").innerHTML = "Email and Alternate Email should be different.";
+        ajaxValidationStatus.alternateemail = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayalternateemail").innerHTML = "";
+      }
 
-function onAlternatePhonenumber()
-{
-  var alternatephone = document.getElementById('alternatephone');
-  alternatephonevalue = alternatephone.value;
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternateemail/" + alternateemailvalue, true);
+      xhttp.send();
 
-  if (alternatephonevalue.trim().length !== 10 || (!alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") && !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9"))) {
-    document.getElementById("displayalternatephone").innerHTML = "Phone number must contain 10 digits and should be valid.";
-    return;
-  }
+      xhttp.onload = function() {
+        if (this.status === 200) {
+          document.getElementById("displayalternateemail").innerHTML = this.responseText;
+          ajaxValidationStatus.alternateemail = this.responseText.trim() === "";
+        } else {
+          ajaxValidationStatus.alternateemail = false;
+        }
+        validateForm();
+      };
 
-  if (alternatephonevalue === phoneNumbervalue)
-  {
-    document.getElementById("displayalternatephone").innerHTML = "Phone number and Alternate Phone number should be different";
-    return;
-  }
+      xhttp.onerror = function() {
+        ajaxValidationStatus.alternateemail = false;
+        validateForm();
+      };
+    }
 
-  var xhttp = new XMLHttpRequest();
-  xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternatephone/" + alternatephonevalue, true);
-  xhttp.send();
+    function onAlternatePhonenumber() {
+      var alternatephone = document.getElementById('alternatephone');
+      alternatephonevalue = alternatephone.value;
 
-  xhttp.onload = function()
-  {
-    document.getElementById("displayalternatephone").innerHTML = this.responseText;
-  }
-};
+      if (alternatephonevalue.trim().length !== 10 || (!alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") &&
+          !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9"))) {
+        document.getElementById("displayalternatephone").innerHTML = "Phone number must contain 10 digits and should be valid.";
+        ajaxValidationStatus.alternatephone = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayalternatephone").innerHTML = "";
+      }
 
- </script>
+      if (alternatephonevalue === phoneNumbervalue) {
+        document.getElementById("displayalternatephone").innerHTML = "Phone number and Alternate Phone number should be different";
+        ajaxValidationStatus.alternatephone = false;
+        validateForm();
+        return;
+      } else {
+        document.getElementById("displayalternatephone").innerHTML = "";
+      }
 
+      var xhttp = new XMLHttpRequest();
+      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternatephone/" + alternatephonevalue, true);
+      xhttp.send();
+
+      xhttp.onload = function() {
+        if (this.status === 200) {
+          document.getElementById("displayalternatephone").innerHTML = this.responseText;
+          ajaxValidationStatus.alternatephone = this.responseText.trim() === "";
+        } else {
+          ajaxValidationStatus.alternatephone = false;
+        }
+        validateForm();
+      };
+
+      xhttp.onerror = function() {
+        ajaxValidationStatus.alternatephone = false;
+        validateForm();
+      };
+    }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

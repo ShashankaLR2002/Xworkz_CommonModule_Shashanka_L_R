@@ -159,7 +159,7 @@ public class PersonRepositoryImpl implements PersonRepository {
             return count;
 
         } catch (Exception e) {
-            System.err.println("Error getting count for alternatePhone: " + alternatephone);
+            System.err.println("Error getting count for alternatePhone:  " + alternatephone);
             e.printStackTrace();
         } finally {
             entityManager.close();
