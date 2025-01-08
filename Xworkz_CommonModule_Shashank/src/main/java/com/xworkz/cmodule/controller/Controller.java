@@ -122,42 +122,76 @@ public class Controller {
     }
 
     @PostMapping("/updateUserProfile")
-    public String updateprofile(Model model, @Valid PersonsDTO personsDTO, BindingResult bindingResult) {
-        model.addAttribute("listoflocation", locref);
-
+    public String updateprofile(@Valid PersonsDTO personsDTO, BindingResult bindingResult, @RequestParam("Img") MultipartFile multipartFile) throws IOException {
         if (bindingResult.hasErrors()) {
-            model.addAttribute("error", bindingResult.getAllErrors());
-
-            return "updateprofile";
-
-        }
-
-        boolean isUpdated = personService.updateprofile(personsDTO);
-        if (isUpdated) {
-            return "signin";
-        } else {
             return "updateprofile";
         }
-    }
 
-    @PostMapping("/updateimage")
-    public String updateimage(@RequestParam("Img") MultipartFile multipartFile) throws IOException {
-        if (multipartFile.isEmpty()) {
-            return "success";
-
-        } else {
-            System.out.println("MultipartFile" + multipartFile);
-            System.out.println("FileName" + multipartFile.getOriginalFilename());
-            System.out.println("MultipartFile" + multipartFile.getContentType());
-
+        String filePath = null;
+        if (!multipartFile.isEmpty()) {
             byte[] bytes = multipartFile.getBytes();
             Path path = Paths.get("D:\\Commons-File-Upload\\" + System.currentTimeMillis() + ".jpg");
             Files.write(path, bytes);
-            String filePath = path.getFileName().toString();
-            System.out.println("FilePath" + filePath);
-
-            return "imguploadsuccess";
+            filePath = path.toString();
         }
 
+        boolean isUpdated = personService.updateprofile(personsDTO, filePath);
+
+        if (isUpdated) {
+            return "success";
+        } else {
+            return "updateprofile";
+        }
     }
+
+
+    @GetMapping("/forgotPassword")
+    public String forgotpwd() {
+
+        return "forgotpassword";
+    }
+
+
+    @PostMapping("/forgotPwd")
+
+    public String forgotpassword(String email, String newPassword,String confirmPassword) {
+        if (!newPassword.equals(confirmPassword)) {
+            return "resetpassword";
+        }
+        Boolean isupdated = personService.forgotpwd(email, newPassword);
+        if (isupdated) {
+            return "signin";
+        }
+
+        return "forgotpassword";
+    }
+
+
+//    @PostMapping("/updateimage")
+//    public String updateimage(@RequestParam("Img") MultipartFile multipartFile, HttpSession httpSession) throws IOException {
+//        if (multipartFile.isEmpty()) {
+//            return "success";
+//        } else {
+//            System.out.println("MultipartFile: " + multipartFile);
+//            System.out.println("FileName: " + multipartFile.getOriginalFilename());
+//            System.out.println("ContentType: " + multipartFile.getContentType());
+//
+//            PersonEntity loggedInUser = (PersonEntity) httpSession.getAttribute("loggedInUser");
+//
+//            if (loggedInUser == null) {
+//                return "signin";
+//            }
+//
+//            byte[] bytes = multipartFile.getBytes();
+//            Path path = Paths.get("D:\\Commons-File-Upload\\" + System.currentTimeMillis() + ".jpg");
+//            Files.write(path, bytes);
+//
+//            String filePath = path.getFileName().toString();
+//            System.out.println("FilePath: " + filePath);
+//
+//
+//            return "imguploadsuccess";
+//        }
+//    }
 }
+

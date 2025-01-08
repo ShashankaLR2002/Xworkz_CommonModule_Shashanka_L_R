@@ -1,4 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -70,13 +70,21 @@
         <label for="password" class="form-label">Password</label>
         <input type="password" id="password" name="password" required class="form-control">
       </div>
+
       <c:if test="${not empty accountLockedMessage}">
-             <div style="color: red;">
-               <p>${accountLockedMessage}</p>
-             </div>
-           </c:if>
-       <button type="submit" class="btn btn-primary w-100">Sign In</button>
+        <div style="color: red;">
+          <p>${accountLockedMessage}</p>
+        </div>
+      </c:if>
+
+      <button type="submit" class="btn btn-primary w-100">Sign In</button>
     </form>
+
+    <!-- Forgot password link -->
+    <div class="reset-link">
+      <a href="forgotPassword" class="btn btn-link">Forgot Password</a>
+    </div>
+
  </div>
 </body>
 </html>

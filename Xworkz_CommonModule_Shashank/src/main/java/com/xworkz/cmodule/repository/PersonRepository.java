@@ -3,6 +3,8 @@ package com.xworkz.cmodule.repository;
 import com.xworkz.cmodule.dto.PersonsDTO;
 import com.xworkz.cmodule.entity.PersonEntity;
 
+import java.time.LocalDateTime;
+
 public interface PersonRepository {
 
     public boolean onsave(PersonEntity entity);
@@ -24,6 +26,7 @@ public interface PersonRepository {
     PersonEntity findByEmail(String email);
 
     public PersonEntity findByName(String name) ;
+
 
 
 

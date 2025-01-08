@@ -3,9 +3,6 @@ package com.xworkz.cmodule.service;
 import com.xworkz.cmodule.dto.PersonsDTO;
 import com.xworkz.cmodule.entity.PersonEntity;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-
 public interface PersonService {
 
     public boolean save(PersonsDTO dto);
@@ -26,7 +23,11 @@ public interface PersonService {
 
     public boolean saveEmail(String email);
 
-    public boolean updateprofile(PersonsDTO personsDTO);
+    public boolean updateprofile(PersonsDTO personsDTO, String filePath);
+
+   // public boolean uploadprofileimg(String filePaths,String loggedInUserName);
+
+    public boolean forgotpwd(String email,String newpassword);
 
 
 }

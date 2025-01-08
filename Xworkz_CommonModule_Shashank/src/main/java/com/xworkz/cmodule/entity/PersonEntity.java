@@ -4,6 +4,7 @@ import lombok.Data;
 
 import javax.persistence.*;
 import javax.validation.constraints.Digits;
+import java.time.LocalDateTime;
 
 @Data
 
@@ -47,7 +48,12 @@ public class PersonEntity extends AbstractAuditEntity {
     String password;
 
     @Column(name = "LoginCount")
-    int LoginCount;
+    int loginCount;
 
+    @Column(name = "ImageFilePath")
+    String filePath;
+
+    @Column(name = "AccountLockTime")
+    LocalDateTime accountLockTime;
 
 }

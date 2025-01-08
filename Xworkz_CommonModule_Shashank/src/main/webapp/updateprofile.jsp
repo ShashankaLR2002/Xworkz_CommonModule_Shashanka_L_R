@@ -1,11 +1,13 @@
-<%@ page isELIgnored = "false"%>
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isELIgnored = "false" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
   <style>
     .header-content {
       display: flex;
@@ -13,29 +15,40 @@
       align-items: center;
       width: 100%;
     }
+
     .logo-img {
       width: 140px;
       height: 70px;
     }
+
     .header-buttons {
       display: flex;
-      gap: 10px;
+      gap: 20px;
     }
+
     h1 {
       text-align: center;
       flex: 1;
       margin: 0;
     }
+
     .form-container {
       max-width: 600px;
       margin: 0 auto;
     }
+
     .error-message {
       color: red;
       font-size: 0.875rem;
     }
+
+    .upload-form {
+      max-width: 600px;
+      height: 20px;
+    }
   </style>
 </head>
+
 <body>
 
   <header class="d-flex flex-wrap justify-content-between align-items-center py-3 mb-4 border-bottom">
@@ -47,18 +60,18 @@
       <h1>Update Details</h1>
 
       <div class="header-buttons">
-         <a href ="SignupAct" style="display:inline;">
-          <button type="submit" class="btn btn-primary">Sign up</button>
+        <a href="SignupAct" style="display:inline;">
+          <button type="button" class="btn btn-primary">Sign up</button>
         </a>
-        <a href ="SigninAct" style="display:inline;">
-          <button type="submit" class="btn btn-primary">Sign In</button>
+        <a href="SigninAct" style="display:inline;">
+          <button type="button" class="btn btn-primary">Sign In</button>
         </a>
       </div>
-      </div>
+    </div>
   </header>
 
   <div class="container form-container">
-    <form action="updateUserProfile" method="post" onsubmit="return validateForm()">
+    <form action="updateUserProfile" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
       <h3>Update with your Details</h3>
 
       <c:forEach var="i" items="${error}">
@@ -67,7 +80,7 @@
 
       <div class="mb-3">
         <label for="name" class="form-label">Name:</label>
-        <input type="text" id="name" name="Name" class="form-control" placeholder="Enter your name" value = "${loggedInUser.name}" required readonly onchange="onname()">
+        <input type="text" id="name" name="Name" class="form-control" placeholder="Enter your name" value="${loggedInUser.name}" required readonly>
       </div>
 
       <div class="mb-3">
@@ -96,7 +109,7 @@
 
       <div class="mb-3">
         <label for="location" class="form-label">Location:</label>
-        <select id="location" name="location" class="form-control">
+        <select id="location" name="location" class="form-control" required>
           <option value="">Select the option</option>
           <c:forEach items="${listoflocation}" var="location">
             <option value="${location}">${location}</option>
@@ -105,17 +118,26 @@
         <span id="displayLocation" class="error-message"></span>
       </div>
 
-      <button type="submit" id="submitBtn" class="btn btn-primary w-100" disabled>Submit</button>
+      <div class="mb-3 upload-form">
+        <label for="file-upload" class="btn btn-secondary">
+          Choose file
+        </label>
+        <input id="file-upload" type="file" name="Img" class="d-none" onchange="this.nextElementSibling.innerHTML = this.files[0].name"/>
+          <span id="file-name" class="file-name"></span>
+
+        <span id="displayfile" class="error-message"></span>
+      </div>
+
+      <button type="submit" id="submitBtn" class="btn btn-primary w-100">Submit</button>
     </form>
   </div>
 
   <script>
-
     let ajaxValidationStatus = {
       email: false,
       phoneNumber: false,
       alternateemail: false,
-      alternatephone: false
+      alternatephone: false,
     };
 
     function validateForm() {
@@ -136,22 +158,16 @@
         }
       }
 
-      document.getElementById("submitBtn").disabled = hasError;
-
       return !hasError;
     }
 
-
     function onEmail() {
       var email = document.getElementById('email');
-      emailvalue = email.value;
+      var emailvalue = email.value;
 
-      if (!emailvalue.includes('@gmail.com') && !emailvalue.includes('@yahoo.com') && !emailvalue.includes('@outlook.com') && !emailvalue.includes('@hotmail.com') &&
-          !emailvalue.includes('.edu') && !emailvalue.includes('.org') &&
-          !emailvalue.includes('.info') && !emailvalue.includes('.net')) {
+      if (!emailvalue.includes('@') || !emailvalue.includes('.')) {
         document.getElementById("displayemail").innerHTML = "Enter a valid email address.";
         ajaxValidationStatus.email = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayemail").innerHTML = "";
@@ -161,7 +177,7 @@
       xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/email/" + emailvalue, true);
       xhttp.send();
 
-      xhttp.onload = function() {
+      xhttp.onload = function () {
         if (this.status === 200) {
           document.getElementById("displayemail").innerHTML = this.responseText;
           ajaxValidationStatus.email = this.responseText.trim() === "";
@@ -171,7 +187,7 @@
         validateForm();
       };
 
-      xhttp.onerror = function() {
+      xhttp.onerror = function () {
         ajaxValidationStatus.email = false;
         validateForm();
       };
@@ -179,13 +195,11 @@
 
     function onPhoneNumber() {
       var phoneNumber = document.getElementById('phoneNumber');
-      phoneNumbervalue = phoneNumber.value;
+      var phoneNumbervalue = phoneNumber.value;
 
-      if (phoneNumbervalue.trim().length !== 10 || (!phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7") &&
-        !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9"))) {
+      if (phoneNumbervalue.trim().length !== 10 || !phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7") && !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9")) {
         document.getElementById("displayphoneNumber").innerHTML = "Phone number must contain 10 digits and should be valid.";
         ajaxValidationStatus.phoneNumber = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayphoneNumber").innerHTML = "";
@@ -195,7 +209,7 @@
       xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/phoneNumber/" + phoneNumbervalue, true);
       xhttp.send();
 
-      xhttp.onload = function() {
+      xhttp.onload = function () {
         if (this.status === 200) {
           document.getElementById("displayphoneNumber").innerHTML = this.responseText;
           ajaxValidationStatus.phoneNumber = this.responseText.trim() === "";
@@ -205,7 +219,7 @@
         validateForm();
       };
 
-      xhttp.onerror = function() {
+      xhttp.onerror = function () {
         ajaxValidationStatus.phoneNumber = false;
         validateForm();
       };
@@ -213,22 +227,20 @@
 
     function onAlternateemail() {
       var alternateemail = document.getElementById('alternateemail');
-      alternateemailvalue = alternateemail.value;
+      var alternateemailvalue = alternateemail.value;
 
-      if (!alternateemailvalue.includes('@gmail.com') && !alternateemailvalue.includes('@yahoo.com') && !alternateemailvalue.includes('@outlook.com') && !alternateemailvalue.includes('@hotmail.com') &&
-          !alternateemailvalue.includes('.edu') && !alternateemailvalue.includes('.org') && !alternateemailvalue.includes('.info') && !alternateemailvalue.includes('.net')) {
+      if (!alternateemailvalue.includes('@') || !alternateemailvalue.includes('.')) {
         document.getElementById("displayalternateemail").innerHTML = "Enter a valid email address.";
         ajaxValidationStatus.alternateemail = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayalternateemail").innerHTML = "";
       }
 
+      var emailvalue = document.getElementById('email').value;
       if (emailvalue === alternateemailvalue) {
         document.getElementById("displayalternateemail").innerHTML = "Email and Alternate Email should be different.";
         ajaxValidationStatus.alternateemail = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayalternateemail").innerHTML = "";
@@ -238,7 +250,7 @@
       xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternateemail/" + alternateemailvalue, true);
       xhttp.send();
 
-      xhttp.onload = function() {
+      xhttp.onload = function () {
         if (this.status === 200) {
           document.getElementById("displayalternateemail").innerHTML = this.responseText;
           ajaxValidationStatus.alternateemail = this.responseText.trim() === "";
@@ -248,7 +260,7 @@
         validateForm();
       };
 
-      xhttp.onerror = function() {
+      xhttp.onerror = function () {
         ajaxValidationStatus.alternateemail = false;
         validateForm();
       };
@@ -256,22 +268,20 @@
 
     function onAlternatePhonenumber() {
       var alternatephone = document.getElementById('alternatephone');
-      alternatephonevalue = alternatephone.value;
+      var alternatephonevalue = alternatephone.value;
 
-      if (alternatephonevalue.trim().length !== 10 || (!alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") &&
-          !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9"))) {
+      if (alternatephonevalue.trim().length !== 10 || !alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") && !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9")) {
         document.getElementById("displayalternatephone").innerHTML = "Phone number must contain 10 digits and should be valid.";
         ajaxValidationStatus.alternatephone = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayalternatephone").innerHTML = "";
       }
 
-      if (alternatephonevalue === phoneNumbervalue) {
+      var phoneNumbervalue = document.getElementById('phoneNumber').value;
+      if (phoneNumbervalue === alternatephonevalue) {
         document.getElementById("displayalternatephone").innerHTML = "Phone number and Alternate Phone number should be different";
         ajaxValidationStatus.alternatephone = false;
-        validateForm();
         return;
       } else {
         document.getElementById("displayalternatephone").innerHTML = "";
@@ -281,7 +291,7 @@
       xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternatephone/" + alternatephonevalue, true);
       xhttp.send();
 
-      xhttp.onload = function() {
+      xhttp.onload = function () {
         if (this.status === 200) {
           document.getElementById("displayalternatephone").innerHTML = this.responseText;
           ajaxValidationStatus.alternatephone = this.responseText.trim() === "";
@@ -291,14 +301,15 @@
         validateForm();
       };
 
-      xhttp.onerror = function() {
+      xhttp.onerror = function () {
         ajaxValidationStatus.alternatephone = false;
         validateForm();
       };
     }
   </script>
 
-
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
+
 </html>

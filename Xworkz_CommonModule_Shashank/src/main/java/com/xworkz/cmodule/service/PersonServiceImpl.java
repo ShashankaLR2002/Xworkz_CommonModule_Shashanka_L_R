@@ -59,13 +59,23 @@ public class PersonServiceImpl implements PersonService {
             return null;
         }
 
-        if (entity.getLoginCount() == -1) {
+        if (entity.getLoginCount() == -1 && password.equals(entity.getPassword())) {
             return entity;
         }
 
-        if (entity.getLoginCount() > 2) {
-            System.out.println("Account locked for email: " + email);
-            return null;
+        if (entity.getAccountLockTime() != null) {
+            LocalDateTime lockTime = entity.getAccountLockTime();
+            LocalDateTime currentTime = LocalDateTime.now();
+            long minutesSinceLock = java.time.Duration.between(lockTime, currentTime).toMinutes();
+
+            if (minutesSinceLock > 2) {
+                entity.setAccountLockTime(null);
+                entity.setLoginCount(0);
+                personRepository.update(entity);
+            } else {
+                System.out.println("Account locked for email " + email);
+                return null;
+            }
         }
 
         if (entity.getPassword().equals(password)) {
@@ -75,6 +85,12 @@ public class PersonServiceImpl implements PersonService {
         } else {
             int updatedCount = entity.getLoginCount() + 1;
             entity.setLoginCount(updatedCount);
+
+            if (updatedCount > 2) {
+                System.out.println("Account locked for email " + email);
+                entity.setAccountLockTime(LocalDateTime.now());
+                System.out.println("Account locked time " + LocalDateTime.now());
+            }
             personRepository.update(entity);
             return null;
         }
@@ -200,7 +216,7 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean updateprofile(PersonsDTO personsDTO) {
+    public boolean updateprofile(PersonsDTO personsDTO, String filePath) {
         PersonEntity entity = personRepository.findByName(personsDTO.getName());
 
         if (entity != null) {
@@ -210,13 +226,40 @@ public class PersonServiceImpl implements PersonService {
             entity.setAlternateemail(personsDTO.getAlternateemail());
             entity.setAlternatephone(personsDTO.getAlternatephone());
             entity.setLocation(personsDTO.getLocation());
+            entity.setFilePath(filePath);
             entity.setUpdatedBy(personsDTO.getName());
             entity.setUpdatedDate(LocalDateTime.now());
+
+            return personRepository.update(entity);
+        }
+        return false;
+    }
+
+    @Override
+    public boolean forgotpwd(String email, String newpassword) {
+        PersonEntity entity = personRepository.findByEmail(email);
+        String encryptedPassword = passwordEncoder.encode(newpassword);
+
+        if (entity != null) {
+            entity.setPassword(encryptedPassword);
             return personRepository.update(entity);
         }
 
+
         return false;
     }
+
+
+//    @Override
+//    public boolean uploadprofileimg(String filePaths, String loggedInUserName) {
+//        PersonEntity entity = personRepository.findByName(loggedInUserName);
+//
+//        if (entity != null) {
+//            entity.setFilePath(filePaths);
+//            return personRepository.update(entity);
+//        }
+//        return false;
+//    }
 
 
 }
