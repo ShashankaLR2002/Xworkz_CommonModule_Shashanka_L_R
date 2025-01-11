@@ -25,9 +25,11 @@ public interface PersonService {
 
     public boolean updateprofile(PersonsDTO personsDTO, String filePath);
 
-   // public boolean uploadprofileimg(String filePaths,String loggedInUserName);
+    public boolean forgotpwd(String email);
 
-    public boolean forgotpwd(String email,String newpassword);
+    public boolean resetPasswordWithToken(String email, String token, String newPassword);
 
+    public boolean resetemailforgotpwd(String email, String token);
 
 }
+

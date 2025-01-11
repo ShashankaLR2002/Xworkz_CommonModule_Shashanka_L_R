@@ -39,7 +39,6 @@
 
   <header class="d-flex flex-wrap justify-content-between align-items-center py-3 mb-4 border-bottom">
     <div class="header-content w-100">
-      <!-- Logo on the left -->
       <div class="ms-3">
         <img src="https://x-workz.in/static/media/Logo.cf195593dc1b3f921369.png" alt="Xworkz" class="logo-img">
       </div>
@@ -80,9 +79,8 @@
       <button type="submit" class="btn btn-primary w-100">Sign In</button>
     </form>
 
-    <!-- Forgot password link -->
     <div class="reset-link">
-      <a href="forgotPassword" class="btn btn-link">Forgot Password</a>
+      <a href="forgotPwd" class="btn btn-link">Forgot Password</a>
     </div>
 
  </div>

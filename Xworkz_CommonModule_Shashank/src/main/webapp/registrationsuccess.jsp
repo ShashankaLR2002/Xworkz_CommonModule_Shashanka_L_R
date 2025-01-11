@@ -1,4 +1,5 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ page isELIgnored="false" %>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,51 +12,64 @@
       justify-content: space-between;
       align-items: center;
       width: 100%;
-      padding: 10px 20px;
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
     }
-
     .logo-img {
       width: 140px;
       height: 70px;
     }
-
     .header-buttons {
       display: flex;
       gap: 10px;
     }
-
-    .main-content {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
+    h1 {
+      text-align: center;
+      flex: 1;
+      margin: 0;
+    }
+    .form-container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="header-content">
+
+  <header class="d-flex flex-wrap justify-content-between align-items-center py-3 mb-4 border-bottom">
+    <div class="header-content w-100">
       <div class="ms-3">
         <img src="https://x-workz.in/static/media/Logo.cf195593dc1b3f921369.png" alt="Xworkz" class="logo-img">
       </div>
 
+      <h1>Course Registration</h1>
+
       <div class="header-buttons">
-         <a href="SignupAct" style="display:inline;">
+         <a href ="SignupAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign up</button>
         </a>
-        <a href="SigninAct" style="display:inline;">
+        <a href ="SigninAct" style="display:inline;">
           <button type="submit" class="btn btn-primary">Sign In</button>
         </a>
+         <c:if test="${not empty imageName}">
+                <img src="${pageContext.request.contextPath}/uploads/${imageName}" class="rounded-circle" width="100">
+              </c:if>
+            </div>
       </div>
-    </div>
+      </div>
   </header>
 
-  <div class="main-content">
-    <h1 class="display-4 text-success">Registered Successfully</h1>
+  <div class="text-center">
+    <h1 class="display-4 text-success">Sign in Successfully</h1>
+    <div class="mt-3">
+
+
+
+    <div class="mt-3">
+      <a href="Updateprofileact" class="btn btn-primary">Update Profile</a>
+    </div>
   </div>
 
 </body>

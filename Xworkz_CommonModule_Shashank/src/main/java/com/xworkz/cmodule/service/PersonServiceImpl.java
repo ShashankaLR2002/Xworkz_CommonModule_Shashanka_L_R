@@ -13,6 +13,7 @@ import javax.mail.internet.MimeMessage;
 import java.time.LocalDateTime;
 import java.util.Properties;
 import java.util.Random;
+import java.util.UUID;
 
 @Service
 public class PersonServiceImpl implements PersonService {
@@ -78,10 +79,11 @@ public class PersonServiceImpl implements PersonService {
             }
         }
 
-        if (entity.getPassword().equals(password)) {
+        if (passwordEncoder.matches(password, entity.getPassword())) {
             entity.setLoginCount(0);
             personRepository.update(entity);
             return entity;
+
         } else {
             int updatedCount = entity.getLoginCount() + 1;
             entity.setLoginCount(updatedCount);
@@ -106,7 +108,6 @@ public class PersonServiceImpl implements PersonService {
         } else {
             return 0;
         }
-
 
         return count;
     }
@@ -221,6 +222,7 @@ public class PersonServiceImpl implements PersonService {
 
         if (entity != null) {
             entity.setName(personsDTO.getName());
+
             entity.setEmail(personsDTO.getEmail());
             entity.setPhoneNumber(personsDTO.getPhoneNumber());
             entity.setAlternateemail(personsDTO.getAlternateemail());
@@ -236,30 +238,79 @@ public class PersonServiceImpl implements PersonService {
     }
 
     @Override
-    public boolean forgotpwd(String email, String newpassword) {
+    public boolean forgotpwd(String email) {
         PersonEntity entity = personRepository.findByEmail(email);
-        String encryptedPassword = passwordEncoder.encode(newpassword);
 
-        if (entity != null) {
-            entity.setPassword(encryptedPassword);
-            return personRepository.update(entity);
+        if (entity == null) {
+            System.out.println("Email not found: " + email);
+            return false;
         }
 
+        String token = UUID.randomUUID().toString();
+        entity.setResetToken(token);
 
-        return false;
+        personRepository.update(entity);
+
+        return resetemailforgotpwd(email, token);
     }
 
 
-//    @Override
-//    public boolean uploadprofileimg(String filePaths, String loggedInUserName) {
-//        PersonEntity entity = personRepository.findByName(loggedInUserName);
-//
-//        if (entity != null) {
-//            entity.setFilePath(filePaths);
-//            return personRepository.update(entity);
-//        }
-//        return false;
-//    }
+    @Override
+    public boolean resetemailforgotpwd(String email, String token) {
+        final String username = "lrshashank2002@gmail.com";
+        final String userPassword = "xrlc rqiv zsus wcnx";
+
+        Properties prop = new Properties();
+        prop.put("mail.smtp.host", "smtp.gmail.com");
+        prop.put("mail.smtp.port", "587");
+        prop.put("mail.smtp.auth", "true");
+        prop.put("mail.smtp.starttls.enable", "true");
+
+        Session session = Session.getInstance(prop, new javax.mail.Authenticator() {
+            @Override
+            protected PasswordAuthentication getPasswordAuthentication() {
+                return new PasswordAuthentication(username, userPassword);
+            }
+        });
+
+        try {
+            Message message = new MimeMessage(session);
+            message.setFrom(new InternetAddress(username));
+            message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email));
+            message.setSubject("Password Reset Request");
+            message.setText("Your reset token is: " + token);
+
+            Transport.send(message);
+
+            System.out.println("Password reset token sent to: " + email);
+            return true;
+
+        } catch (MessagingException e) {
+            System.err.println("Error sending email: " + e.getMessage());
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    @Override
+    public boolean resetPasswordWithToken(String email, String token, String newPassword) {
+        PersonEntity entity = personRepository.findByEmail(email);
+
+        if (entity == null) {
+            System.out.println("Email not found: " + email);
+            return false;
+        }
+
+        if (entity.getResetToken() == null || !entity.getResetToken().equals(token)) {
+            System.out.println("Invalid token for email: " + email);
+            return false;
+        }
+
+        String encryptedPassword = passwordEncoder.encode(newPassword);
+        entity.setPassword(encryptedPassword);
+
+        return personRepository.update(entity);
+    }
 
 
 }

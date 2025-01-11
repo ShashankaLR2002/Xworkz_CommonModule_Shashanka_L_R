@@ -1,9 +1,7 @@
 package com.xworkz.cmodule.repository;
 
-import com.xworkz.cmodule.dto.PersonsDTO;
 import com.xworkz.cmodule.entity.PersonEntity;
 
-import java.time.LocalDateTime;
 
 public interface PersonRepository {
 
@@ -25,10 +23,7 @@ public interface PersonRepository {
 
     PersonEntity findByEmail(String email);
 
-    public PersonEntity findByName(String name) ;
-
-
-
+    public PersonEntity findByName(String name);
 
 
 }

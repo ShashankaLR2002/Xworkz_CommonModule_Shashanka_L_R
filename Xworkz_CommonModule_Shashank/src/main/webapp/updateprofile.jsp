@@ -85,25 +85,25 @@
 
       <div class="mb-3">
         <label for="email" class="form-label">Email:</label>
-        <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email" required onchange="onEmail()">
+        <input type="text" id="email" name="email" class="form-control" placeholder="Enter your email" value="${loggedInUser.email}" required onchange="onEmail()">
         <span id="displayemail" class="error-message"></span>
       </div>
 
       <div class="mb-3">
         <label for="phoneNumber" class="form-label">Phone Number:</label>
-        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Enter your phone number" required onchange="onPhoneNumber()">
+        <input type="text" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="Enter your phone number" value="${loggedInUser.phoneNumber}" required onchange="onPhoneNumber()">
         <span id="displayphoneNumber" class="error-message"></span>
       </div>
 
       <div class="mb-3">
         <label for="alternateemail" class="form-label">Alternate Email:</label>
-        <input type="text" id="alternateemail" name="alternateemail" class="form-control" placeholder="Enter your alternate email" required onchange="onAlternateemail()">
+        <input type="text" id="alternateemail" name="alternateemail" class="form-control" placeholder="Enter your alternate email"  value="${loggedInUser.alternateemail}" required onchange="onAlternateemail()">
         <span id="displayalternateemail" class="error-message"></span>
       </div>
 
       <div class="mb-3">
         <label for="alternatephone" class="form-label">Alternate Phone:</label>
-        <input type="text" id="alternatephone" name="alternatephone" class="form-control" placeholder="Enter your alternate phone" required onchange="onAlternatePhonenumber()">
+        <input type="text" id="alternatephone" name="alternatephone" class="form-control" placeholder="Enter your alternate phone" value="${loggedInUser.alternatephone}" required onchange="onAlternatePhonenumber()">
         <span id="displayalternatephone" class="error-message"></span>
       </div>
 
@@ -132,181 +132,7 @@
     </form>
   </div>
 
-  <script>
-    let ajaxValidationStatus = {
-      email: false,
-      phoneNumber: false,
-      alternateemail: false,
-      alternatephone: false,
-    };
 
-    function validateForm() {
-      const errorMessages = document.querySelectorAll('.error-message');
-      let hasError = false;
-
-      for (let message of errorMessages) {
-        if (message.innerHTML.trim() !== "") {
-          hasError = true;
-          break;
-        }
-      }
-
-      for (let field in ajaxValidationStatus) {
-        if (!ajaxValidationStatus[field]) {
-          hasError = true;
-          break;
-        }
-      }
-
-      return !hasError;
-    }
-
-    function onEmail() {
-      var email = document.getElementById('email');
-      var emailvalue = email.value;
-
-      if (!emailvalue.includes('@') || !emailvalue.includes('.')) {
-        document.getElementById("displayemail").innerHTML = "Enter a valid email address.";
-        ajaxValidationStatus.email = false;
-        return;
-      } else {
-        document.getElementById("displayemail").innerHTML = "";
-      }
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/email/" + emailvalue, true);
-      xhttp.send();
-
-      xhttp.onload = function () {
-        if (this.status === 200) {
-          document.getElementById("displayemail").innerHTML = this.responseText;
-          ajaxValidationStatus.email = this.responseText.trim() === "";
-        } else {
-          ajaxValidationStatus.email = false;
-        }
-        validateForm();
-      };
-
-      xhttp.onerror = function () {
-        ajaxValidationStatus.email = false;
-        validateForm();
-      };
-    }
-
-    function onPhoneNumber() {
-      var phoneNumber = document.getElementById('phoneNumber');
-      var phoneNumbervalue = phoneNumber.value;
-
-      if (phoneNumbervalue.trim().length !== 10 || !phoneNumbervalue.startsWith("6") && !phoneNumbervalue.startsWith("7") && !phoneNumbervalue.startsWith("8") && !phoneNumbervalue.startsWith("9")) {
-        document.getElementById("displayphoneNumber").innerHTML = "Phone number must contain 10 digits and should be valid.";
-        ajaxValidationStatus.phoneNumber = false;
-        return;
-      } else {
-        document.getElementById("displayphoneNumber").innerHTML = "";
-      }
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/phoneNumber/" + phoneNumbervalue, true);
-      xhttp.send();
-
-      xhttp.onload = function () {
-        if (this.status === 200) {
-          document.getElementById("displayphoneNumber").innerHTML = this.responseText;
-          ajaxValidationStatus.phoneNumber = this.responseText.trim() === "";
-        } else {
-          ajaxValidationStatus.phoneNumber = false;
-        }
-        validateForm();
-      };
-
-      xhttp.onerror = function () {
-        ajaxValidationStatus.phoneNumber = false;
-        validateForm();
-      };
-    }
-
-    function onAlternateemail() {
-      var alternateemail = document.getElementById('alternateemail');
-      var alternateemailvalue = alternateemail.value;
-
-      if (!alternateemailvalue.includes('@') || !alternateemailvalue.includes('.')) {
-        document.getElementById("displayalternateemail").innerHTML = "Enter a valid email address.";
-        ajaxValidationStatus.alternateemail = false;
-        return;
-      } else {
-        document.getElementById("displayalternateemail").innerHTML = "";
-      }
-
-      var emailvalue = document.getElementById('email').value;
-      if (emailvalue === alternateemailvalue) {
-        document.getElementById("displayalternateemail").innerHTML = "Email and Alternate Email should be different.";
-        ajaxValidationStatus.alternateemail = false;
-        return;
-      } else {
-        document.getElementById("displayalternateemail").innerHTML = "";
-      }
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternateemail/" + alternateemailvalue, true);
-      xhttp.send();
-
-      xhttp.onload = function () {
-        if (this.status === 200) {
-          document.getElementById("displayalternateemail").innerHTML = this.responseText;
-          ajaxValidationStatus.alternateemail = this.responseText.trim() === "";
-        } else {
-          ajaxValidationStatus.alternateemail = false;
-        }
-        validateForm();
-      };
-
-      xhttp.onerror = function () {
-        ajaxValidationStatus.alternateemail = false;
-        validateForm();
-      };
-    }
-
-    function onAlternatePhonenumber() {
-      var alternatephone = document.getElementById('alternatephone');
-      var alternatephonevalue = alternatephone.value;
-
-      if (alternatephonevalue.trim().length !== 10 || !alternatephonevalue.startsWith("6") && !alternatephonevalue.startsWith("7") && !alternatephonevalue.startsWith("8") && !alternatephonevalue.startsWith("9")) {
-        document.getElementById("displayalternatephone").innerHTML = "Phone number must contain 10 digits and should be valid.";
-        ajaxValidationStatus.alternatephone = false;
-        return;
-      } else {
-        document.getElementById("displayalternatephone").innerHTML = "";
-      }
-
-      var phoneNumbervalue = document.getElementById('phoneNumber').value;
-      if (phoneNumbervalue === alternatephonevalue) {
-        document.getElementById("displayalternatephone").innerHTML = "Phone number and Alternate Phone number should be different";
-        ajaxValidationStatus.alternatephone = false;
-        return;
-      } else {
-        document.getElementById("displayalternatephone").innerHTML = "";
-      }
-
-      var xhttp = new XMLHttpRequest();
-      xhttp.open("GET", "http://localhost:8080/Xworkz_CommonModule_Shashank/alternatephone/" + alternatephonevalue, true);
-      xhttp.send();
-
-      xhttp.onload = function () {
-        if (this.status === 200) {
-          document.getElementById("displayalternatephone").innerHTML = this.responseText;
-          ajaxValidationStatus.alternatephone = this.responseText.trim() === "";
-        } else {
-          ajaxValidationStatus.alternatephone = false;
-        }
-        validateForm();
-      };
-
-      xhttp.onerror = function () {
-        ajaxValidationStatus.alternatephone = false;
-        validateForm();
-      };
-    }
-  </script>
 
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 

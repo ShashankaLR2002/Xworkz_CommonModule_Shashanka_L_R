@@ -22,38 +22,42 @@ import java.time.LocalDateTime;
 public class PersonEntity extends AbstractAuditEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    int id;
+    private int id;
 
     @Column(name = "Name")
-    String name;
+    private String name;
 
     @Column(name = "Email")
-    String email;
-    @Digits(integer = 10, fraction = 0, message = "Number should contain 10 digits")
+    private String email;
 
+    @Digits(integer = 10, fraction = 0, message = "Number should contain 10 digits")
     @Column(name = "PhoneNumber")
-    long phoneNumber;
+    private long phoneNumber;
 
     @Column(name = "Alternateemail")
-    String alternateemail;
-    @Digits(integer = 10, fraction = 0, message = "Number should contain 10 digits")
+    private String alternateemail;
 
+    @Digits(integer = 10, fraction = 0, message = "Number should contain 10 digits")
     @Column(name = "Alternatephonenumber")
-    long alternatephone;
+    private long alternatephone;
 
     @Column(name = "Location")
-    String location;
+    private String location;
 
     @Column(name = "Password")
-    String password;
+    private String password;
 
     @Column(name = "LoginCount")
-    int loginCount;
+    private int loginCount;
 
     @Column(name = "ImageFilePath")
-    String filePath;
+    private String filePath;
 
     @Column(name = "AccountLockTime")
-    LocalDateTime accountLockTime;
+    private LocalDateTime accountLockTime;
+
+    @Column(name = "ResetToken")
+    private String resetToken;
+
 
 }

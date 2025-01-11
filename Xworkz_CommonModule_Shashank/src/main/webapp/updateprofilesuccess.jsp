@@ -1,5 +1,4 @@
-<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<%@ page isELIgnored = "false"%>
+<%@ page isELIgnored="false" %>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -31,9 +30,9 @@
       max-width: 600px;
       margin: 0 auto;
     }
-    .reset-link {
-      text-align: center;
-      margin-top: 10px;
+    .error-message {
+      color: red;
+      font-size: 0.875rem;
     }
   </style>
 </head>
@@ -55,23 +54,15 @@
           <button type="submit" class="btn btn-primary">Sign In</button>
         </a>
       </div>
-    </div>
+      </div>
   </header>
 
-  <div class="container form-container">
+  <div class="text-center">
+    <h1 class="display-4 text-success">Update Details Successfully</h1>
+        <p class="lead">Your Details has been updated</p>
 
-    <form action="forgotPwd" method="get">
-      <div class="mb-3">
-        <label for="email" class="form-label">Email</label>
-        <input type="email" id="email" name="email"  placeholder="Enter your email" required class="form-control">
-
-
-      </div>
-
-      <button type="submit" class="btn btn-primary w-100">Request Password Reset</button>
-    </form>
+    <div class="mt-3">
 
 
- </div>
 </body>
 </html>

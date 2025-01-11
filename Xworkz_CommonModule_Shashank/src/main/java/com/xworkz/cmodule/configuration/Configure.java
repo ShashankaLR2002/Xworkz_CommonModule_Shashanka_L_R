@@ -12,6 +12,8 @@ import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.web.multipart.commons.CommonsMultipartResolver;
 import org.springframework.web.servlet.ViewResolver;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.InternalResourceViewResolver;
 
 import javax.sql.DataSource;
@@ -21,7 +23,7 @@ import javax.sql.DataSource;
 @ComponentScan("com.xworkz.cmodule")
 @EnableWebMvc
 @PropertySource("classpath:application.properties")
-public class Configure {
+public class Configure implements WebMvcConfigurer {
 
     @Value("${spring.datasource.driver-class-name}")
     private String driverClassName;
@@ -58,7 +60,6 @@ public class Configure {
         return bean;
     }
 
-
     @Bean
     public DataSource dataSource() {
         DriverManagerDataSource dataSource = new DriverManagerDataSource();
@@ -78,6 +79,12 @@ public class Configure {
         commonsMultipartResolver.setMaxInMemorySize(sizeofimg);
 
         return commonsMultipartResolver;
+    }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/uploads/**")
+                .addResourceLocations("file:D:/Commons-File-Upload/");
     }
 
 
